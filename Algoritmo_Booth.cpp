@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <vector>
 
@@ -324,22 +325,12 @@ int main()
     int Multiplicador = -1;
     std::cout << " Ingrese el Multiplicando: ";
     std::cin >> Multiplicando;
+
     
-    while((Multiplicando > 255)||(Multiplicando < -256))
-    {
-        std::cout << " FUERA DE RANGO " << std::endl;
-        std::cout << " Ingrese el Multiplicando: ";
-        std::cin >> Multiplicando;
-    }
     std::cout << " Ingrese el Multiplicador: ";
-    
     std::cin >> Multiplicador;
-    while((Multiplicador > 255)||(Multiplicador < -256))
-    {
-        std::cout << " FUERA DE RANGO " << std::endl;
-        std::cout << " Ingrese el Multiplicador: ";
-        std::cin >> Multiplicador;
-    }
+  
+    
     std::cout << std::endl;
     
     if((Multiplicador == 0) || (Multiplicando == 0))
