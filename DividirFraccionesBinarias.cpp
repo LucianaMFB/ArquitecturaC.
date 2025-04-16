@@ -277,14 +277,14 @@ int restarExponentes (std::vector<int> A,std::vector<int> B)
     int exponenteB = convertirAEntero(B);
     int resultadoResta = exponenteA - exponenteB + 127;
     
-    if (resultadoResta <= 0)
+    if (resultadoResta < 0)
     {
-        return 0;
+        return -1;
     }
     
     else if (resultadoResta > 255)
     {
-        return 0;
+        return -2;
     }
     
     return resultadoResta;
@@ -297,21 +297,21 @@ int compararBinarios (std::vector<int> A, std::vector<int> B)
     {
         if((A[i] == 1) && (B[i] == 0))
         {
-            std::cout <<  "     A mayor que B, ambos se restan, Cociente = 1     " << std::endl;
+            //std::cout <<  "     A mayor que B, ambos se restan, Cociente = 1     " << std::endl;
             //print(A);
             return 1;
         }
         
         else if((A[i] == 0) && (B[i] == 1))
         {
-            std::cout <<  "     B mayor que A, se agrega un 0, Cociente = 0     " << std::endl;
+            //std::cout <<  "     B mayor que A, se agrega un 0, Cociente = 0     " << std::endl;
             //print(B);
             return 2;
         }
         
         i++;
     }
-    std::cout <<  "     A es Igual que B, Cociente = 1" << std::endl;
+    //std::cout <<  "     A es Igual que B, Cociente = 1" << std::endl;
     return 3;
 }
 
@@ -372,8 +372,8 @@ std::vector<int> dividirMatisas(std::vector<int> dividendo, std::vector<int> div
     
     for (int i = 0; i < limite; i++)
     {
-        std::cout << std::endl;
-        std::cout << "  Ciclo n: " << i << std::endl;
+        //std::cout << std::endl;
+        //std::cout << "  Ciclo n: " << i << std::endl;
         int l = compararBinarios(dividendo,divisor);
         
         switch (l)
@@ -409,14 +409,62 @@ std::vector<int> dividirMatisas(std::vector<int> dividendo, std::vector<int> div
     cociente.erase(cociente.begin());
     cociente = redondearBinarioFlotante(cociente);
     
-    std::cout << "  RESULTADO matisa: ";
-    print(cociente);
+    //std::cout << "  RESULTADO matisa: ";
+    //print(cociente);
     return cociente;
 }
+
+int recorrer(std::vector<int> A)
+{
+    int cont = 0;
+    
+    for (int i = 1; i < A.size(); i++)
+    {
+        cont = cont + A[i];
+        //std::cout << cont << std::endl;
+    }
+    
+    return cont;
+}
+
+
 
 void dividirBinariosFlotantes(std::vector<int> dividendo, std::vector<int> divisor)
 {
     int signoDividendo = dividendo[0];
+    int signoDivisor = divisor[0];
+    
+    int signoResultado = definirSigno(signoDividendo, signoDivisor);
+    
+    if ( (recorrer(dividendo) == 0) && (recorrer(divisor) == 0) )
+    {
+        std::cout << std::endl;
+        std::cout << "  NaN :(" << std::endl;
+        return ;
+    }
+    
+    else if ( (recorrer(divisor) == 0) && (signoResultado == 1) )
+    {
+        std::cout << std::endl;
+        std::cout << "  - Inf" << std::endl;
+        return ;
+    }
+    
+    else if ( (recorrer(divisor) == 0) && (signoResultado == 0) )
+    {
+        std::cout << std::endl;
+        std::cout << "  Inf" << std::endl;
+        return ;
+    }
+    
+    else if ( (recorrer(divisor) == 0))
+    {
+        std::cout << std::endl;
+        std::cout << "  Resultado = 0" << std::endl;
+        return ;
+    }
+    
+    
     std::vector<int> exponenteDividendo;
     for (int i = 1; i<9; i++)
     {
@@ -429,7 +477,6 @@ void dividirBinariosFlotantes(std::vector<int> dividendo, std::vector<int> divis
     }
     
     
-    int signoDivisor = divisor[0];
     std::vector<int> exponenteDivisor;
     for (int i = 1; i<9; i++)
     {
@@ -441,10 +488,21 @@ void dividirBinariosFlotantes(std::vector<int> dividendo, std::vector<int> divis
         matisaDivisor.push_back(divisor[i]);
     }
     
-    int signoResultado = definirSigno(signoDividendo, signoDivisor);
-    
     int exponenteResultado = restarExponentes (exponenteDividendo, exponenteDivisor);
-    std::cout << exponenteResultado << std::endl;
+    //std::cout << exponenteResultado << std::endl;
+    
+    if (exponenteResultado == -1)
+    {
+        std::cout << "  UNDERFLOW :(" << std::endl;
+        return ;
+    }
+    
+    else if (exponenteResultado == -2)
+    {
+        std::cout << "  OVERFLOW :(" << std::endl;
+        return ;
+    }
+    
     std::vector<int> exponenteResultadoBinario = convertirEnteroABinario(exponenteResultado);
     if (exponenteResultadoBinario.size() < 8)
     {
@@ -455,6 +513,8 @@ void dividirBinariosFlotantes(std::vector<int> dividendo, std::vector<int> divis
             exponenteResultadoBinario.insert(exponenteResultadoBinario.begin(), 0);
        }
     }
+    
+    
     
     std::vector<int> matisaResultado = dividirMatisas(matisaDividendo, matisaDivisor);
     std::vector<int> resultadoGeneral = juntarTodo (signoResultado, exponenteResultadoBinario, matisaResultado);
@@ -468,21 +528,24 @@ void dividirBinariosFlotantes(std::vector<int> dividendo, std::vector<int> divis
 
 int main()
 {
-    float dividendo = 10.44444;
-    float divisor = -5.22322;
-    float resul = -1.999617094435999;
+    float dividendo = -04.455;
+    float divisor = -0.0;
     
-    
+    std::cout << std::endl;
+    std::cout << "  DIVIDENDO: " << dividendo ; 
     std::vector<int> dividendoBinario = convertirABinarioIEEE(dividendo);
-    std::vector<int> divisorBinario = convertirABinarioIEEE(divisor);
-    dividirBinariosFlotantes(dividendoBinario, divisorBinario);
-    convertirABinarioIEEE(resul);
+    std::cout << std::endl;
     
-    //1 01111111 111 1111 1111 0011 0111 0100   Web
-    //           111 1111 1111 1001 1100 0111
-    //1 10000000 111 1111 1111 1001 1100 0111   Yo
-    //1 01111111 111 1111 1111 0011 0000 0000   Algoritmo
+    std::cout << std::endl;
+    std::cout << "  DIVISOR: " << divisor;
+    std::vector<int> divisorBinario = convertirABinarioIEEE(divisor);
+    std::cout << std::endl;
+    dividirBinariosFlotantes(dividendoBinario, divisorBinario);
+    std::cout << std::endl;
+    
+    std::cout << "  RESULTADO: " << dividendo / divisor << std::endl;
 
+    
 
     return 0;
 }
