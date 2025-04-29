@@ -1,5 +1,5 @@
 .data
-Array: .word 8, 7, 6, 5, 4, 3, 2, 1		# Crear array de enteros
+Array: .word 83, 79, 6, 5, 40, 36, 2, 21		# Crear array de enteros
 size: .word 8						# Tamaño del array
 .text
 .globl main
